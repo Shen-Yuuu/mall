@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id = "app">
+        <table align="center" width="100%" border="1">
+            <tr>
+                <th>订单ID</th>
+                <th>用户ID</th>
+                <th>总金额</th>
+            </tr>
+            <tr v-for="order in orders">
+                <td>{{ order.orderId }}</td>
+                <td>{{ order.userId }}</td>
+                <td>{{ order.total }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>
+        let config = {
+            el: '#app',
+            data: {
+                orders: []
+            },
+            methods: {
+                getOrders: function () {
+                    let url = window.location.href;
+                    let userId = url.split('=')[1];
+                    axios.get('/order/selectByUserId?userId=' + userId).then(response => {
+                        console.log(response);
+                        console.log("hello");
+                        this.orders = response.data.data;
+                    })
+                }
+            }
+        };
+
+        let vue = new Vue(config)
+        vue.getOrders()
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+@startuml
+
+actor "用户" as User
+participant "浏览器" as Browser
+participant "注册服务" as RegisterService
+participant "用户服务" as UserService
+participant "登录服务" as LoginService
+participant "下游" as merchant
+
+activate User
+User -> Browser: 填写注册表单, 点击注册
+
+activate Browser
+Browser -> RegisterService: 提交注册信息
+
+activate RegisterService
+RegisterService -> UserService: 调用用户服务
+
+activate UserService
+UserService --> RegisterService: 返回结果
+
+deactivate UserService
+RegisterService -> Browser: 返回结果
+
+deactivate RegisterService
+Browser -> LoginService: 提交登录信息
+
+activate LoginService
+LoginService -> merchant: 返回结果
+merchant -> LoginService: 获取登录结果
+LoginService --> Browser: 返回结果
+deactivate LoginService
+
+Browser --> User: 返回结果
+
+@enduml

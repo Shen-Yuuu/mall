@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id = "app">
+        <h1>添加商品</h1>
+        <form action="item/insert" method="post" enctype="multipart/form-data">
+            <input type="text" name="name" placeholder="商品名称"><br>
+            <input type="text" name="price" placeholder="商品价格"><br>
+            <input type="text" name="description" placeholder="商品描述"><br>
+            <input type="file" name="file"></input>
+            <select name = "categoryId">
+                <option value="">请选择商品分类</option>
+                <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
+            </select>
+            <input type="submit" value="添加"></input>
+        </form>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script src = "js/axios.min.js"></script>
+    <script>
+        let config = {
+            el:'#app',
+            data:{
+                categories: []
+            },
+            methods: {
+                getCategories: function(){
+                    axios.get('http://localhost:8091/category/selectAll').then(response => {
+
+                        console.log(response);
+                        this.categories = response.data.data;
+
+                    }).catch(function(error) {
+
+                        console.error('Error fetching categories:', error);
+
+                    });
+                }
+            },
+
+        };
+
+        let vue = new Vue(config);
+        vue.getCategories()
+    </script>
+</body>
+</html>

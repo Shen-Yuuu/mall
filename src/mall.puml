@@ -1,0 +1,86 @@
+@startuml
+
+interface CategoryService{
+    {abstract}+selectAll(): List<Category>
+}
+
+interface CategoryMapper{
+    +selectAll(): List<Category>
+}
+
+class CategoryServiceImpl implements CategoryService {
+    -categoryMapper: CategoryMapper
+    +selectAll(): List<Category>
+}
+
+class Category {
+    +id: int
+    +name: String
+}
+
+interface ItemService{
+    +selectByCategoryId(categoryId:int):List<Item>
+    +selectById(id:int):Item
+    +insert(item:Item):void
+    +delete(id:int):void
+    +update(item:Item):void
+}
+
+interface ItemMapper{
+    +selectByCategoryId(categoryId:int):List<Item>
+    +selectById(id:int):Item
+    +insert(item:Item):void
+    +delete(id:int):void
+    +update(item:Item):void
+}
+
+
+class ItemServiceImpl implements ItemService {
+    -itemMapper: ItemMapper
+    +selectByCategoryId(categoryId:int):List<Item>
+    +selectById(id:int):Item
+    +insert(item:Item):void
+    +delete(id:int):void
+    +update(item:Item):void
+}
+
+class Item {
+    +id: int
+    +categoryId: int
+    +name: String
+    +price: double
+    +image: String
+    +description: String
+
+}
+
+class CategoryController {
+    -categoryService: CategoryService
+    +selectAll(): ServerResult<List<Category>>
+}
+class ItemController {
+    -itemService: ItemService
+    +selectByCategoryId(categoryId:int): ServerResult<List<Item>>
+    +selectById(id:int): ServerResult<Item>
+    +insert(item:Item): ServerResult<Item>
+    +delete(id:int): ServerResult<String>
+    +update(item:Item): ServerResult<Item>
+}
+
+class ServerResult<T>{
+    +code: int
+    +message: String
+    +data: T
+    {static} +ok(): ServerResult
+    {static} +error(code: int, message:String)
+
+}
+
+
+
+CategoryServiceImpl ..> CategoryMapper
+ItemServiceImpl ..> ItemMapper
+ItemController ..> ItemService
+CategoryController ..> CategoryService
+Item --o Category
+@enduml

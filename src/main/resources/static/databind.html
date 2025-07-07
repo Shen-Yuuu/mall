@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id = "app"></div>
+    <script>
+        //编写vue框架
+        function Vue(options) {
+            let id = options.elem;
+            let elem = document.getElementById(id);
+            let data = options.data;
+            elem.innerHTML = data;
+        }
+
+        let option = {
+            elem: 'app',
+            data: 'hello world',
+        }
+        new Vue(option);
+    </script>
+</body>
+</html>

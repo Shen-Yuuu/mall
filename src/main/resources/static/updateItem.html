@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id = "app">
+    <h1>修改商品</h1>
+    <form action="item/update" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" :value="item.id"><br>
+        <input type="hidden" name="categoryId" :value="item.categoryId">
+        <input type="text" name="name" placeholder="商品名称" :value="item.name"><br>
+        <input type="text" name="price" placeholder="商品价格" :value="item.price"><br>
+        <input type="text" name="description" placeholder="商品描述" :value="item.description"><br>
+        <input type="file" name="file"></input>
+        <select name = "categoryId" v-model = "item.categoryId" >
+            <option value="">请选择商品分类</option>
+            <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
+        </select>
+        <input type="submit" value="修改" ></input>
+    </form>
+</div>
+
+<script src="js/vue.js"></script>
+<script src = "js/axios.min.js"></script>
+<script>
+    let config = {
+        el:'#app',
+        data:{
+            categories: [],
+            item:{
+                id: '',
+                name: '',
+                price: '',
+                description: '',
+                image: '',
+                categoryId: ''
+            }
+        },
+        methods: {
+
+            getCategories: function(){
+                axios.get('http://localhost:8091/category/selectAll').then(response => {
+
+                    console.log(response);
+                    this.categories = response.data.data;
+
+                }).catch(function(error) {
+
+                    console.error('Error fetching categories:', error);
+
+                });
+            },
+
+            getItems: function(){
+
+                let url = window.location.href;
+                let id = url.split('=')[1];
+
+                axios.get('item/selectById?id=' + id).then(response => {
+
+                    console.log(response);
+                    let item = response.data.data;
+                    this.item.id = item.id;
+                    this.item.name = item.name;
+                    this.item.price = item.price;
+                    this.item.description = item.description;
+                    this.item.categoryId = item.categoryId;
+
+                }).catch(function(error) {
+
+                    console.error('Error fetching item:', error);
+
+                });
+            }
+        },
+
+    };
+
+    let vue = new Vue(config);
+    vue.getCategories()
+    vue.getItems()
+</script>
+</body>
+</html>
